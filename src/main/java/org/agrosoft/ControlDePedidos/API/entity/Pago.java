@@ -1,6 +1,8 @@
-package org.agrosoft.ControlDePedidos.entity;
+package org.agrosoft.ControlDePedidos.API.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+
+import static org.agrosoft.ControlDePedidos.API.constant.ValidationConstants.CANNOT_BE_NULL_OR_EMPTY;
 
 @Entity
 @Builder
@@ -20,11 +24,13 @@ public class Pago implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pago")
-    private Integer idPago;
+    private int idPago;
 
+    @NotNull(message = "MontoPago" + CANNOT_BE_NULL_OR_EMPTY)
     @Column(name = "monto_pago", nullable = false, columnDefinition = "DECIMAL(7,2)")
-    private Float montoPago;
+    private float montoPago;
 
+    @NotNull(message = "FechaPago" + CANNOT_BE_NULL_OR_EMPTY)
     @Column(name = "fecha_pago", nullable = false)
     private LocalDate fechaPago;
 
