@@ -1,4 +1,4 @@
-package org.agrosoft.ControlDePedidos.entity;
+package org.agrosoft.ControlDePedidos.API.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.agrosoft.ControlDePedidos.API.utils.CatalogoAbstracto;
 
 import java.io.Serializable;
 
@@ -16,14 +17,14 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "status_pago")
-public class StatusPago implements Serializable {
+@Table(name = "status_pedido")
+public class StatusPedido implements Serializable, CatalogoAbstracto {
 
     @Id
-    @Column(name = "id_status_pago")
-    private Integer idStatusPago;
+    @Column(name = "id_status_pedido")
+    private int idStatusPedido;
 
-    @Column(name = "descripcion_pago", length = 12, nullable = false)
+    @Column(name = "descripcion_status_pedido", length = 30, nullable = false)
     private String descripcion;
 
 }

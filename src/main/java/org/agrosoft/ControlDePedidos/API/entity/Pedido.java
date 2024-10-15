@@ -1,6 +1,7 @@
-package org.agrosoft.ControlDePedidos.entity;
+package org.agrosoft.ControlDePedidos.API.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+
+import static org.agrosoft.ControlDePedidos.API.constant.ValidationConstants.CANNOT_BE_NULL_OR_EMPTY;
 
 @Entity
 @Builder
@@ -21,23 +24,25 @@ public class Pedido implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pedido")
-    private Integer idPedido;
+    private int idPedido;
 
     @ManyToOne
     @JoinColumn(name = "fk_status_pedido", nullable = false)
     private StatusPedido statusPedido;
 
+    @NotNull(message = "FechaPedido" + CANNOT_BE_NULL_OR_EMPTY)
     @Column(name = "fecha_pedido", nullable = false)
     private LocalDate fechaPedido;
 
     @Column(name = "numero_guia", length = 30)
     private String numeroGuia;
 
+    @NotNull(message = "MontoTotal" + CANNOT_BE_NULL_OR_EMPTY)
     @Column(name = "monto_total", nullable = false, columnDefinition = "DECIMAL(7,2)")
-    private Float montoTotal;
+    private float montoTotal;
 
     @Column(name = "monto_envio", columnDefinition = "DECIMAL(7,2)")
-    private Float montoEnvio;
+    private float montoEnvio;
 
     @ManyToOne
     @JoinColumn(name = "fk_cliente", nullable = false)
