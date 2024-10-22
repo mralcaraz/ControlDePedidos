@@ -1,8 +1,12 @@
 package org.agrosoft.ControlDePedidos.API.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +16,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 import static org.agrosoft.ControlDePedidos.API.constant.ValidationConstants.CANNOT_BE_NULL_OR_EMPTY;
+import static org.agrosoft.ControlDePedidos.API.constant.ValidationConstants.LENGTH_NOT_VALID;
 
 @Entity
 @Builder
@@ -23,6 +28,7 @@ public class Pago implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "id_pago")
     private int idPago;
 
@@ -30,10 +36,13 @@ public class Pago implements Serializable {
     @Column(name = "monto_pago", nullable = false, columnDefinition = "DECIMAL(7,2)")
     private float montoPago;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @NotNull(message = "FechaPago" + CANNOT_BE_NULL_OR_EMPTY)
     @Column(name = "fecha_pago", nullable = false)
     private LocalDate fechaPago;
 
+    @Nullable
+    @Size(min = 3, max = 30, message = "numeroReferencia" + LENGTH_NOT_VALID)
     @Column(name = "numero_referencia", length = 30)
     private String numeroReferencia;
 

@@ -40,11 +40,12 @@ public class Cliente implements Serializable {
     private String primerApellido;
 
     @Nullable
-    @Size(min = 3, max = 30, message = "nombre" + LENGTH_NOT_VALID)
+    @Size(min = 3, max = 30, message = "segundoApellido" + LENGTH_NOT_VALID)
     @Column(name = "segundoApellido", length = 30)
     private String segundoApellido;
 
     @NotEmpty(message = "Contacto" + CANNOT_BE_NULL_OR_EMPTY)
+    @Size(min = 3, max = 30, message = "contacto" + LENGTH_NOT_VALID)
     @Column(name = "contacto", nullable = false)
     private String contacto;
 }

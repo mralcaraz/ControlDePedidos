@@ -32,7 +32,7 @@ public abstract class BaseStaticService<T extends CatalogoAbstracto,
     protected T getEntity(S item, Supplier<E> exceptionSupplier) throws E {
         log.info("Getting [{}] entity for item: {}", getClass().getSimpleName(), item);
         return this.getEntityList().stream()
-                .filter( e -> e.getDescripcion().equalsIgnoreCase(item.getDescripcion()))
+                .filter( e -> e.getDescripcion().equalsIgnoreCase(item.getDescripcion()) )
                 .findFirst()
                 .orElseThrow(exceptionSupplier);
     }
