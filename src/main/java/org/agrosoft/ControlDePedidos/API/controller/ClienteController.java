@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/Cliente")
+@RequestMapping("/Clientes")
 public class ClienteController {
 
     @Autowired
@@ -52,8 +52,8 @@ public class ClienteController {
         HttpStatus status;
         int idGuardado;
         if(errors.hasErrors()) {
-            throw new InvalidParameterException("Cliente received did not match all the validations: "
-                    + ErrorUtils.errorsToStringSet(errors));
+            throw new InvalidParameterException("Cliente received did not match all the validations: " +
+                    ErrorUtils.errorsToStringSet(errors));
         }
         validarInexistenciaDeCliente(toSave.getContacto());
         try {
@@ -65,7 +65,7 @@ public class ClienteController {
             log.error(e.getMessage(), e);
         }
         log.info("crearCliente --END");
-        return ResponseEntity.ok(idGuardado);
+        return new ResponseEntity<>(idGuardado, status);
     }
 
     @DeleteMapping("/borrarCliente/{idCliente}")
@@ -73,15 +73,18 @@ public class ClienteController {
         log.info("borrarCliente --START with id <{}>", idCliente);
         Cliente toDelete = validarExistenciaDeCliente(idCliente);
         HttpStatus status;
+        String msg;
         try {
             service.borrarCliente(toDelete.getIdCliente());
             status = HttpStatus.OK;
+            msg = "Cliente with Id <" + idCliente + "> has been deleted from database";
         } catch (Exception e) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
+            msg = "Cliente with Id <" + idCliente + "> has NOT been deleted from database. Reason: " + e.getMessage();
             log.error(e.getMessage(), e);
         }
-        log.info("borrarCliente --END");
-        return ResponseEntity.ok("Cliente with Id <" + idCliente + "> has been deleted from database");
+        log.info("borrarCliente --END. Result: {}", msg);
+        return new ResponseEntity<>(msg, status);
     }
 
     private void validarInexistenciaDeCliente(String contacto) throws ClienteAlreadyExistsException {

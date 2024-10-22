@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice(assignableTypes = {StatusLogisticaController.class, StatusPagoController.class,
-        StatusPedidoController.class, TipoEnvioController.class, ClienteController.class})
+        StatusPedidoController.class, TipoEnvioController.class, ClienteController.class, PagoController.class,
+        ProductoController.class, PedidoController.class})
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class GeneralControllerHandler {
 
@@ -29,7 +30,8 @@ public class GeneralControllerHandler {
     @ExceptionHandler({
             StatusLogisticaNotFoundException.class, StatusPagoNotFoundException.class,
             StatusPedidoNotFoundException.class, TipoEnvioNotFoundException.class,
-            ClienteAlreadyExistsException.class, ClienteNotFoundException.class
+            ClienteAlreadyExistsException.class, ClienteNotFoundException.class,
+            PagoNotFoundException.class, ProductoAlreadyExistsException.class
     })
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
