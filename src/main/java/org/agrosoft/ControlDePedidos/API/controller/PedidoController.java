@@ -33,9 +33,9 @@ public class PedidoController {
     }
 
     @GetMapping("/porId/{idPedido}")
-    public ResponseEntity<?> encontrarPorId(int id){
-        log.info("encontrarPorId --START with id <{}>", id);
-        return ResponseEntity.ok(pedidoService.encontrarPorId(id).orElse(null));
+    public ResponseEntity<?> encontrarPorId(@PathVariable int idPedido){
+        log.info("encontrarPorId --START with id <{}>", idPedido);
+        return ResponseEntity.ok(pedidoService.encontrarPorId(idPedido).orElse(null));
     }
 
     @GetMapping("porParametros")

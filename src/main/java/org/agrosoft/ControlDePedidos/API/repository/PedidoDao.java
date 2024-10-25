@@ -1,6 +1,6 @@
 package org.agrosoft.ControlDePedidos.API.repository;
 
-import org.agrosoft.ControlDePedidos.API.entity.*;
+import org.agrosoft.ControlDePedidos.API.entity.Pedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

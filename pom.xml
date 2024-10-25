@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.agrosoft</groupId>
 	<artifactId>ControlDePedidos</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>ControlDePedidos</name>
 	<description>Control de pedidos</description>
 	<url/>
@@ -74,23 +74,81 @@
 			<artifactId>flatlaf</artifactId>
 			<version>3.5.1</version>
 		</dependency>
-    </dependencies>
+		<!-- https://mvnrepository.com/artifact/com.intellij/forms_rt -->
+		<!--
+		IntelliJ go into File -> Settings -> Editor -> GUI Designer and do the following setting:
+			Generate UI into: Java source code
+			Enable Automatically copy form runtime classes...
+		-->
+		<dependency>
+			<groupId>com.intellij</groupId>
+			<artifactId>forms_rt</artifactId>
+			<version>7.0.3</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
 				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>org.agrosoft.ControlDePedidos.ControlDePedidosApplication</mainClass>
+						</manifest>
+					</archive>
 					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
+						<exclude>**/config.xml</exclude>
+						<exclude>**/application.properties</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.2</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<includeScope>runtime</includeScope>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources</directory>
+									<includes>
+										<include>config.xml</include>
+										<include>application.properties</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>

@@ -1,6 +1,5 @@
 package org.agrosoft.ControlDePedidos.API.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -26,7 +25,6 @@ public class Cliente implements Serializable {
     @Id
     @Column(name = "id_cliente")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int idCliente;
 
     @NotEmpty(message = "NombreCliente" + CANNOT_BE_NULL_OR_EMPTY)

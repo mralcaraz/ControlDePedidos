@@ -1,6 +1,7 @@
 package org.agrosoft.ControlDePedidos.API.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +24,7 @@ import static org.agrosoft.ControlDePedidos.API.constant.ValidationConstants.CAN
 public class Producto implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_producto")
     private int idProducto;
 
@@ -34,12 +36,8 @@ public class Producto implements Serializable {
     @Column(name = "precio_unitario", nullable = false, columnDefinition = "DECIMAL(7,2)")
     private float precioUnitario;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinTable(
-            name = "pedidos_productos",
-            joinColumns = @JoinColumn(name = "fk_producto", referencedColumnName = "id_producto", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "fk_pedido", referencedColumnName = "id_pedido", nullable = false)
-    )
+    @JsonIgnore
+    @ManyToMany(mappedBy = "productos")
     private List<Pedido> pedidos;
 
 }
