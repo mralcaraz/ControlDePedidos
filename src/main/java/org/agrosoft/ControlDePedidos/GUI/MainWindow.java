@@ -20,7 +20,7 @@ import java.util.Objects;
 
 @Slf4j
 public class MainWindow extends JFrame {
-    private JFrame thisReference;
+    private final JFrame thisReference;
 
     private JPanel contentPane;
     private JTable tblPedidos;

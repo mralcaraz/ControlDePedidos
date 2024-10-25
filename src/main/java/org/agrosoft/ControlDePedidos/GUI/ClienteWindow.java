@@ -18,8 +18,8 @@ import java.util.Objects;
 
 @Slf4j
 public class ClienteWindow extends JFrame {
-    private JFrame parentForm;
-    private JFrame thisReference;
+    private final JFrame parentForm;
+    private final JFrame thisReference;
 
     private JPanel contentPane;
     private JTable tblClientes;

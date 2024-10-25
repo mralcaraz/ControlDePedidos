@@ -20,10 +20,10 @@ import java.util.function.Consumer;
 
 @Slf4j
 public class AgregarClienteAPedidoWindow extends JFrame {
-    private JFrame parentForm;
-    private JFrame thisReference;
+    private final JFrame parentForm;
+    private final JFrame thisReference;
     private Cliente cliente;
-    private Consumer<Cliente> onClienteSelected;
+    private final Consumer<Cliente> onClienteSelected;
 
     private JPanel contentPane;
     private JTable tblClientes;

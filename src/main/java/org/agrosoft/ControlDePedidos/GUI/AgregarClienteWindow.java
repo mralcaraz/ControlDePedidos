@@ -17,7 +17,7 @@ import java.util.Objects;
 
 @Slf4j
 public class AgregarClienteWindow extends JFrame {
-    private JFrame parentForm;
+    private final JFrame parentForm;
     private JPanel contentPane;
     private JLabel lblNombre;
     private JLabel lblPrimerApellido;

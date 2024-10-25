@@ -19,8 +19,8 @@ import java.util.Objects;
 
 @Slf4j
 public class AgregarPedidoWindow extends JFrame {
-    private JFrame parentForm;
-    private JFrame thisReference;
+    private final JFrame parentForm;
+    private final JFrame thisReference;
     private float montoTotal;
     private Cliente cliente;
 
@@ -56,7 +56,6 @@ public class AgregarPedidoWindow extends JFrame {
         this.montoTotal = 0F;
         this.cliente = null;
 
-
         btnRegresar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -71,6 +70,7 @@ public class AgregarPedidoWindow extends JFrame {
                 }
             }
         });
+
         btnAgregarCliente.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -109,7 +109,7 @@ public class AgregarPedidoWindow extends JFrame {
                         .toList()
         );
         this.cbxTipoEnvio.setModel(model);
-        this.cbxTipoEnvio.setSelectedIndex(0);
+        this.cbxTipoEnvio.setSelectedIndex(1);
         this.cbxTipoEnvio.setEditable(false);
     }
 

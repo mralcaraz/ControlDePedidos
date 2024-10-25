@@ -23,7 +23,6 @@ import java.util.Objects;
 
 @Slf4j
 public class AgregarPagoWindow extends JFrame {
-    private final JFrame thisReference;
     private final JFrame parentForm;
     private final Pedido pedido;
     private static final String placeholder = "Formato: yyyy-mm-dd";
@@ -42,7 +41,6 @@ public class AgregarPagoWindow extends JFrame {
 
 
     public AgregarPagoWindow(JFrame parent, Pedido pedido) {
-        this.thisReference = this;
         this.parentForm = parent;
         this.pedido = pedido;
         log.info("AgregarPagoWindow opened");
