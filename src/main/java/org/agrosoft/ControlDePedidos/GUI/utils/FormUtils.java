@@ -1,11 +1,16 @@
 package org.agrosoft.ControlDePedidos.GUI.utils;
 
+import lombok.extern.slf4j.Slf4j;
+import org.agrosoft.ControlDePedidos.API.utils.CatalogoAbstracto;
+
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.List;
 
+@Slf4j
 public class FormUtils {
 
     private static final DecimalFormat df = new DecimalFormat("####0.00");
@@ -42,5 +47,44 @@ public class FormUtils {
 
     public static String formateaDinero(float cantidad) {
         return "$ " + df.format(cantidad);
+    }
+
+    public static String formateaMensaje(String mensajeOriginal, List<String> detalles) {
+        StringBuilder html = new StringBuilder("<HTML><B>" + mensajeOriginal + "</B><BR/>");
+        for(String detalle : detalles) {
+            html.append("<LI>").append(detalle).append("</LI>");
+        }
+        html.append("</HTML>");
+        return html.toString();
+    }
+
+    public static <E extends Enum<E> & CatalogoAbstracto> E getItemByDescription(Class<E> enumClass, String desc) {
+        for(E enumConstant : enumClass.getEnumConstants()) {
+            if(enumConstant.getDescripcion().equalsIgnoreCase(desc)) {
+                return enumConstant;
+            }
+        }
+        return null;
+    }
+
+    public static void configuraComboBox(JComboBox<String> comboBox, List<String> items, int defaultIndex) {
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        model.addAll(items);
+        comboBox.setModel(model);
+        comboBox.setEditable(false);
+        if(defaultIndex >= 0 && defaultIndex < model.getSize()) {
+            comboBox.setSelectedIndex(defaultIndex);
+        }
+    }
+
+    public static float intentaConvertirFloat(String text) {
+        float valor = 0F;
+        try {
+            valor = Float.parseFloat(text);
+        } catch (NumberFormatException e) {
+            log.error("Exception caught while trying to parse <{}> to float. Returning default 0. Reason: {}", text,
+                    e.getMessage());
+        }
+        return valor;
     }
 }

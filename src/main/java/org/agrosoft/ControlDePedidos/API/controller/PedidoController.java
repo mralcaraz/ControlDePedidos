@@ -77,40 +77,19 @@ public class PedidoController {
         return new ResponseEntity<>(idGuardado, status);
     }
 
-    @PatchMapping("/agregarProducto/{idPedido}/{idProducto}")
-    public ResponseEntity<?> agregarPedido(@PathVariable int idPedido, @PathVariable int idProducto)
-            throws InvalidParameterException {
-        log.info("agregarProducto --START with idPedido <{}> and idProducto <{}>", idPedido, idProducto);
-        HttpStatus status;
-
-        Pedido pedido = pedidoService.encontrarPorId(idPedido)
-                .orElseThrow(() -> new InvalidParameterException("Pedido submitted not found"));
-        pedidoUtil.addProductoToPedido(pedido, idProducto);
-
-        try {
-            log.info("Pedido with id <{}> updated successfully", idPedido);
-            status = HttpStatus.OK;
-        } catch (Exception e) {
-            log.error("Exception while updating pedido: {}", e.getMessage(), e);
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<>(status);
-    }
-
-    @PutMapping("/actualizarPedido/{idPedido}")
-    public ResponseEntity<?> actualizarPedido(@PathVariable int idPedido, @Valid @RequestBody Pedido pedido,
+    @PutMapping("/actualizarPedido")
+    public ResponseEntity<?> actualizarPedido(@Valid @RequestBody Pedido pedido,
                                               Errors errors) throws InvalidParameterException {
-        log.info("actualizarPedido --START for Pedido with id <{}>", idPedido);
+        log.info("actualizarPedido --START for Pedido with id <{}>", pedido.getIdPedido());
         HttpStatus status;
         if(errors.hasErrors()) {
             throw new InvalidParameterException("Pedido received did not match all the validations: " +
                     ErrorUtils.errorsToStringSet(errors));
         }
         pedidoUtil.fixPedidoReferences(pedido);
-        pedido.setIdPedido(idPedido);
         try {
             pedidoService.guardarPedido(pedido);
-            log.info("Pedido updated successfully with id <{}>", idPedido);
+            log.info("Pedido updated successfully with id <{}>", pedido.getIdPedido());
             status = HttpStatus.OK;
         } catch (Exception e) {
             log.error("Exception while updating pedido: {}", e.getMessage(), e);

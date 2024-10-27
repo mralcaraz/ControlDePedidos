@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.agrosoft.ControlDePedidos.API.entity.Producto;
 import org.agrosoft.ControlDePedidos.GUI.clients.ProductoClient;
 import org.agrosoft.ControlDePedidos.GUI.utils.FormUtils;
+import org.agrosoft.ControlDePedidos.GUI.utils.NumericDocumentListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -37,6 +38,7 @@ public class AgregarProductoWindow extends JFrame {
         FormUtils.centrarVentanaEnPantalla(this);
         this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setContentPane(contentPane);
+        this.txtPrecio.getDocument().addDocumentListener(new NumericDocumentListener(this.txtPrecio));
 
         btnRegresar.addActionListener(new ActionListener() {
             @Override

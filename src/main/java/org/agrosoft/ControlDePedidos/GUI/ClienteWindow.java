@@ -68,6 +68,9 @@ public class ClienteWindow extends JFrame {
         btnBorrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (tblClientes.getSelectedRow() < 0) {
+                    return;
+                }
                 log.info("Trying to delete Cliente with id <{}>", tblClientes
                         .getValueAt(tblClientes.getSelectedRow(), 0).toString());
                 borrarCliente();
@@ -113,6 +116,11 @@ public class ClienteWindow extends JFrame {
         }
         this.tblClientes.setModel(dtm);
         FormUtils.redimensionarTabla(this.tblClientes);
+        if (dtm.getRowCount() == 0) {
+            this.btnBorrar.setEnabled(false);
+        } else {
+            this.btnBorrar.setEnabled(true);
+        }
     }
 
     @Override

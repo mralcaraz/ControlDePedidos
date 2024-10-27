@@ -64,7 +64,7 @@ public class Pedido implements Serializable {
     private TipoEnvio tipoEnvio;
 
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "pedidos_productos",
             joinColumns = @JoinColumn(name = "fk_pedido", referencedColumnName = "id_pedido", nullable = false),
@@ -76,5 +76,12 @@ public class Pedido implements Serializable {
     @Builder.Default
     @Column(name = "active", nullable = false)
     private boolean active = true;
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "idPedido=" + idPedido +"'}'";
+    }
+
 
 }

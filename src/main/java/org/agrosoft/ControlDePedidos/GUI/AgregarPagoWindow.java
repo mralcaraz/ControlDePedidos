@@ -8,6 +8,7 @@ import org.agrosoft.ControlDePedidos.API.entity.Pago;
 import org.agrosoft.ControlDePedidos.API.entity.Pedido;
 import org.agrosoft.ControlDePedidos.GUI.clients.PagoClient;
 import org.agrosoft.ControlDePedidos.GUI.utils.FormUtils;
+import org.agrosoft.ControlDePedidos.GUI.utils.NumericDocumentListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -53,6 +54,7 @@ public class AgregarPagoWindow extends JFrame {
         this.setContentPane(contentPane);
         this.txtFecha.setText(placeholder);
         this.txtFecha.setForeground(Color.GRAY);
+        this.txtMonto.getDocument().addDocumentListener(new NumericDocumentListener(this.txtMonto));
 
 
         btnRegresar.addActionListener(new ActionListener() {

@@ -80,8 +80,8 @@ public class PedidoClient {
         int response;
         try {
             URI uri = UriComponentsBuilder
-                    .fromUriString(getBaseUrl() + "/actualizarPedido/{idPedido}")
-                    .buildAndExpand(pedido.getIdPedido())
+                    .fromUriString(getBaseUrl() + "/actualizarPedido")
+                    .build()
                     .toUri();
             log.info("PUT calling [{}]", uri);
             HttpEntity<Pedido> requestEntity = new HttpEntity<>(pedido, RequestUtils.getPostHeaders());
@@ -103,6 +103,37 @@ public class PedidoClient {
         } catch (Exception e) {
             log.error("Exception ocurred while calling endpoint: {}", e.getMessage(), e);
             response = -3;
+        }
+        return response;
+    }
+
+    public static int savePedido(Pedido pedido) {
+        int response;
+        try {
+            HttpEntity<Pedido> requestEntity = new HttpEntity<>(pedido, RequestUtils.getPostHeaders());
+            URI uri = UriComponentsBuilder
+                    .fromUri(URI.create(getBaseUrl() + "/crearPedido"))
+                    .build()
+                    .toUri();
+            log.info("POST calling [{}]", uri);
+            ResponseEntity<Integer> webResponse = new RestTemplate()
+                    .exchange(
+                            uri,
+                            HttpMethod.POST,
+                            requestEntity,
+                            new ParameterizedTypeReference<Integer>() {}
+                    );
+            log.info("Status obtained: <{}>", webResponse.getStatusCode().value());
+            if(webResponse.getStatusCode().is2xxSuccessful()) {
+                response = webResponse.getBody();
+            } else if (webResponse.getStatusCode().is4xxClientError()){
+                response = -1;//error 4XX
+            } else {
+                response = -2;//error 5XX
+            }
+        } catch (Exception e) {
+            log.error("Exception ocurred while calling endpoint: {}", e.getMessage(), e);
+            response = -3;//error Al llamar al servicio
         }
         return response;
     }

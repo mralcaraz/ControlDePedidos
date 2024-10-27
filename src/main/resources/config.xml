@@ -7,5 +7,7 @@
 	<entry key="pagoContext">/Pagos</entry>
 	<entry key="productoContext">/Productos</entry>
 	<entry key="statusPagoContext">/StatusPago</entry>
+	<entry key="statusPedidoContext">/StatusPedido</entry>
+	<entry key="statusLogisticaContext">/StatusLogistica</entry>
 	<entry key="tipoEnvioContext">/TipoEnvio</entry>
 </properties>

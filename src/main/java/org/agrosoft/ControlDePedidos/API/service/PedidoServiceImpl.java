@@ -4,6 +4,7 @@ import org.agrosoft.ControlDePedidos.API.entity.Pedido;
 import org.agrosoft.ControlDePedidos.API.repository.PedidoDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,6 +36,7 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
+    @Transactional
     public int guardarPedido(Pedido pedido) {
         return repository.saveAndFlush(pedido).getIdPedido();
     }
