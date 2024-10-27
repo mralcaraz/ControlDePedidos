@@ -1,6 +1,5 @@
 package org.agrosoft.ControlDePedidos.API.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +24,6 @@ public class Pedido implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "id_pedido")
     private int idPedido;
 
@@ -65,12 +63,25 @@ public class Pedido implements Serializable {
     @JoinColumn(name = "fk_tipo_envio", nullable = false)
     private TipoEnvio tipoEnvio;
 
-    @ManyToMany(mappedBy = "pedidos")
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @JoinTable(
+            name = "pedidos_productos",
+            joinColumns = @JoinColumn(name = "fk_pedido", referencedColumnName = "id_pedido", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "fk_producto", referencedColumnName = "id_producto", nullable = false)
+    )
     private List<Producto> productos;
 
     @NotNull
     @Builder.Default
     @Column(name = "active", nullable = false)
     private boolean active = true;
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "idPedido=" + idPedido +"'}'";
+    }
+
 
 }

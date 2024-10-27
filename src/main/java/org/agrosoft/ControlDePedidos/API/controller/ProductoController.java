@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 @Slf4j
 @RestController
 @RequestMapping("/Productos")
@@ -35,8 +38,16 @@ public class ProductoController {
 
     @GetMapping("/porNombre")
     public ResponseEntity<?> encontrarPorNombre(@RequestParam String nombre) {
-        log.info("encontrarPorNombre --START with nombre <{}>", nombre);
-        return ResponseEntity.ok(produtoService.consultarPorNombreLike(nombre));
+        String decodedNombre = URLDecoder.decode(nombre, StandardCharsets.UTF_8);
+        log.info("encontrarPorNombre --START with nombre <{}>", decodedNombre);
+        return ResponseEntity.ok(produtoService.consultarPorNombreLike(decodedNombre));
+    }
+
+    @GetMapping("/porNombreCompleto")
+    public ResponseEntity<?> encontrarPorNombreCompleto(@RequestParam String nombre) {
+        String decodedNombre = URLDecoder.decode(nombre, StandardCharsets.UTF_8);
+        log.info("encontrarPorNombreCompleto --START with nombre <{}>", decodedNombre);
+        return ResponseEntity.ok(produtoService.consultarPorNombre(decodedNombre).orElse(null));
     }
 
     @GetMapping("/porPedido/{idPedido}")

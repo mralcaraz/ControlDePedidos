@@ -5,7 +5,6 @@ import org.agrosoft.ControlDePedidos.API.utils.CatalogoAbstracto;
 
 @Getter
 public enum StatusPedidoEnum implements CatalogoAbstracto {
-    RECIBIDO("Recibido"),
     EN_ESPERA_DE_PAGO("En espera de pago"),
     EN_PROCESO("En proceso"),
     ENVIADO("Enviado"),

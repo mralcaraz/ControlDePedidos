@@ -1,9 +1,7 @@
 package org.agrosoft.ControlDePedidos.API.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.agrosoft.ControlDePedidos.API.enums.StatusLogisticaEnum;
 import org.agrosoft.ControlDePedidos.API.enums.StatusPagoEnum;
-import org.agrosoft.ControlDePedidos.API.exception.StatusLogisticaNotFoundException;
 import org.agrosoft.ControlDePedidos.API.exception.StatusPagoNotFoundException;
 import org.agrosoft.ControlDePedidos.API.service.staticService.StatusPagoService;
 import org.springframework.beans.factory.annotation.Autowired;

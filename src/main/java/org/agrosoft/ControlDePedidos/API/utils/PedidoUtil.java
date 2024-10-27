@@ -85,10 +85,4 @@ public class PedidoUtil {
         }
     }
 
-    public void addProductoToPedido(Pedido pedido, int idProducto) throws InvalidParameterException {
-        Producto producto = produtoService.consultarPorId(idProducto)
-                .orElseThrow( () -> new InvalidParameterException("Invalid Producto submitted"));
-        pedido.getProductos().add(producto);
-    }
-
 }

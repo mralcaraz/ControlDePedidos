@@ -1,0 +1,13 @@
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="screenNbr">0</entry>
+	<entry key="baseUrl">http://localhost:9000</entry>
+	<entry key="pedidoContext">/Pedidos</entry>
+	<entry key="clienteContext">/Clientes</entry>
+	<entry key="pagoContext">/Pagos</entry>
+	<entry key="productoContext">/Productos</entry>
+	<entry key="statusPagoContext">/StatusPago</entry>
+	<entry key="statusPedidoContext">/StatusPedido</entry>
+	<entry key="statusLogisticaContext">/StatusLogistica</entry>
+	<entry key="tipoEnvioContext">/TipoEnvio</entry>
+</properties>

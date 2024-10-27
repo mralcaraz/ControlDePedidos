@@ -7,7 +7,7 @@ import org.agrosoft.ControlDePedidos.API.utils.CatalogoAbstracto;
 public enum StatusLogisticaEnum implements CatalogoAbstracto {
     PENDIENTE("Pendiente"),
     EN_RUTA("En ruta"),
-    ENVIADO("Enviado");
+    ENTREGADO("Entregado");
 
     private final String descripcion;
 
