@@ -67,7 +67,7 @@ public class AgregarClienteWindow extends JFrame {
         this.parentForm = parent;
         log.info("AgregarClienteWindow opened");
         this.setTitle("Agregar Cliente");
-        this.setSize(600, 600);
+        this.setSize(500, 400);
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         FormUtils.centrarVentanaEnPantalla(this);
