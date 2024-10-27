@@ -64,7 +64,6 @@ public class PedidoController {
             throw new InvalidParameterException("Pedido received did not match all the validations: " +
                     ErrorUtils.errorsToStringSet(errors));
         }
-        pedidoUtil.fixPedidoReferences(toSave);
         try {
             idGuardado = pedidoService.guardarPedido(toSave);
             log.info("Pedido saved successfully with id <{}>", idGuardado);
