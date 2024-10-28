@@ -22,7 +22,7 @@ public class PedidoUtil {
         try {
             List<Producto> entityList = new ArrayList<>();
             for(Producto p : pedido.getProductos()) {
-                entityList.add( produtoService.consultarPorNombre(p.getNombreProducto())
+                entityList.add( produtoService.consultarPorNombre(p.getNombreProducto() )
                         .orElseThrow( () -> new InvalidParameterException("Invalid Producto submitted")) );
             }
             pedido.setProductos(entityList);
@@ -30,5 +30,4 @@ public class PedidoUtil {
             throw new InvalidParameterException("Exception while fixing Pedido sub-entities: " + e.getMessage());
         }
     }
-
 }
