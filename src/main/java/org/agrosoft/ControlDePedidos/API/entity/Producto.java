@@ -43,6 +43,11 @@ public class Producto implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "productos")
     private List<Pedido> pedidos;
 
+    @NotNull
+    @Builder.Default
+    @Column(name = "active", nullable = false)
+    private boolean active = true;
+
     @Override
     public String toString() {
         return "Producto{" +

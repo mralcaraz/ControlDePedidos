@@ -36,11 +36,6 @@ public class PagoServiceImpl implements PagoService {
     }
 
     @Override
-    public List<Pago> encontrarPorReferencia(String referencia) {
-        return repository.findByNumeroReferenciaContains(referencia);
-    }
-
-    @Override
     public int guardarPago(Pago pago) {
         return repository.saveAndFlush(pago).getIdPago();
     }

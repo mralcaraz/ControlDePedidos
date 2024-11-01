@@ -11,7 +11,6 @@ public interface PagoService {
     public List<Pago> encontrarTodos();
     public List<Pago> encontrarPorPedido(int idPedido);
     public List<Pago> encontrarPorRangoFecha(LocalDate fechaIni, LocalDate fechaFin);
-    public List<Pago> encontrarPorReferencia(String referencia);
     public int guardarPago(Pago pago);
     public void eliminarPago(int idPago);
 }

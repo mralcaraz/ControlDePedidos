@@ -235,6 +235,7 @@ public class AgregarPedidoWindow extends JFrame {
                 .toList(), 1);
 
         FormUtils.configuraComboBox(this.cbxProductos, ProductoClient.fetchAll().stream()
+                .filter(Producto::isActive)
                 .map(Producto::getNombreProducto)
                 .toList(), 0);
     }
