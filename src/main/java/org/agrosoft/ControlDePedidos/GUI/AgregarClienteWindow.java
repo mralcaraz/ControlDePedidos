@@ -11,8 +11,6 @@ import org.agrosoft.ControlDePedidos.GUI.utils.FormUtils;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Objects;
 
 @Slf4j
@@ -67,33 +65,25 @@ public class AgregarClienteWindow extends JFrame {
         this.parentForm = parent;
         log.info("AgregarClienteWindow opened");
         this.setTitle("Agregar Cliente");
-        this.setSize(600, 600);
+        this.setSize(500, 400);
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         FormUtils.centrarVentanaEnPantalla(this);
         this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setContentPane(contentPane);
 
-        btnRegresar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (Objects.nonNull(parentForm)) {
-                    parentForm.setVisible(true);
-                    setVisible(false);
-                    log.info("Returning to parent form");
-                    dispose();
-                } else {
-                    log.info("No parent form found. Exit with code 1");
-                    System.exit(1);
-                }
+        btnRegresar.addActionListener(actionEvent -> {
+            if (Objects.nonNull(parentForm)) {
+                parentForm.setVisible(true);
+                setVisible(false);
+                log.info("Returning to parent form");
+                dispose();
+            } else {
+                log.info("No parent form found. Exit with code 1");
+                System.exit(1);
             }
         });
-        btnGuardar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                crearCliente();
-            }
-        });
+        btnGuardar.addActionListener(e -> crearCliente());
     }
 
     {

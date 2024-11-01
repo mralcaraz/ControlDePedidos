@@ -3,10 +3,7 @@ package org.agrosoft.ControlDePedidos.API.entity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -19,6 +16,7 @@ import static org.agrosoft.ControlDePedidos.API.constant.ValidationConstants.CAN
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "idPedido")
 @Table(name = "pedido")
 public class Pedido implements Serializable {
 
@@ -56,7 +54,7 @@ public class Pedido implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "fk_status_logistica", nullable = false)
-    private  StatusLogistica statusLogistica;
+    private StatusLogistica statusLogistica;
 
     @ManyToOne
     @NotNull(message = "TipoEnvio" + CANNOT_BE_NULL_OR_EMPTY)
@@ -80,8 +78,6 @@ public class Pedido implements Serializable {
     @Override
     public String toString() {
         return "Pedido{" +
-                "idPedido=" + idPedido +"'}'";
+                "idPedido=" + idPedido + "'}'";
     }
-
-
 }

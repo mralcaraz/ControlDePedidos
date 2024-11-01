@@ -45,6 +45,26 @@ public class FormUtils {
         }
     }
 
+    public static void mostrarDialogoEnPantalla(String message, String title, int messageType) {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] devices = ge.getScreenDevices();
+
+        int pantallaIndex = XMLHandler.readXMLConfigInt("config.xml", "screenNbr");
+
+        if (pantallaIndex >= 0 && pantallaIndex < devices.length) {
+            Rectangle bounds = devices[pantallaIndex].getDefaultConfiguration().getBounds();
+            JDialog dialog = new JDialog();
+            dialog.setAlwaysOnTop(true);
+            dialog.setModal(true);
+            dialog.setSize(400, 150);
+            dialog.setLocation(bounds.x + (bounds.width/2) - 150, bounds.y + (bounds.height/2) - 400);
+            JOptionPane.showMessageDialog(dialog, message, title, messageType);
+            dialog.dispose();
+        } else {
+            JOptionPane.showMessageDialog(null, message, title, messageType);
+        }
+    }
+
     public static String formateaDinero(float cantidad) {
         return "$ " + df.format(cantidad);
     }

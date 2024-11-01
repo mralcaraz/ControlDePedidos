@@ -9,6 +9,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -104,6 +105,37 @@ public class ProductoClient {
         } catch (Exception e) {
             log.error("Exception ocurred while calling endpoint: {}", e.getMessage(), e);
             response = -3;//error Al llamar al servicio
+        }
+        return response;
+    }
+
+    public static int updateProducto(Producto producto) {
+        int response;
+        try {
+            URI uri = UriComponentsBuilder
+                    .fromUriString(getBaseUrl() + "/actualizaProducto")
+                    .build()
+                    .toUri();
+            log.info("PUT calling [{}]", uri);
+            HttpEntity<Producto> requestEntity = new HttpEntity<>(producto, RequestUtils.getPostHeaders());
+            ResponseEntity<Void> webResponse = new RestTemplate()
+                    .exchange(
+                            uri,
+                            HttpMethod.PUT,
+                            requestEntity,
+                            new ParameterizedTypeReference<Void>() {}
+                    );
+            log.info("Status obtained: <{}>", webResponse.getStatusCode().value());
+            if(webResponse.getStatusCode().is2xxSuccessful()) {
+                response = 1;
+            } else if (webResponse.getStatusCode().is4xxClientError()){
+                response = -1;//error 4XX
+            } else {
+                response = -2;//error 5XX
+            }
+        } catch (Exception e) {
+            log.error("Exception ocurred while calling endpoint: {}", e.getMessage(), e);
+            response = -3;
         }
         return response;
     }

@@ -14,5 +14,5 @@ public interface PedidoService {
                                                Integer idCliente, Integer idStatusPago, Integer idStatusLogistica,
                                                Integer idTipoEnvio, Boolean isActive);
     public int guardarPedido(Pedido pedido);
-
+    public List<Pedido> encontrarFinalizables();
 }

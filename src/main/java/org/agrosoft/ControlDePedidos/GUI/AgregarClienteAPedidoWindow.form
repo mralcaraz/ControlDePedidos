@@ -48,7 +48,8 @@
       <vspacer id="2b941">
         <constraints>
           <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-            <minimum-size width="20" height="20"/>
+            <minimum-size width="20" height="100"/>
+            <maximum-size width="20" height="100"/>
           </grid>
         </constraints>
       </vspacer>
@@ -64,6 +65,7 @@
         <constraints>
           <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
             <minimum-size width="20" height="20"/>
+            <maximum-size width="20" height="20"/>
           </grid>
         </constraints>
       </vspacer>
@@ -86,6 +88,7 @@
         <constraints>
           <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
             <minimum-size width="20" height="20"/>
+            <maximum-size width="20" height="20"/>
           </grid>
         </constraints>
       </vspacer>

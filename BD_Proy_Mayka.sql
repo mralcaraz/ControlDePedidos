@@ -36,6 +36,7 @@ CREATE TABLE producto (
     id_producto INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     nombre_producto VARCHAR(50) NOT NULL,
     precio_unitario DECIMAL(7,2) NOT NULL,
+    active BOOLEAN NOT NULL,
     CONSTRAINT uix_producto UNIQUE(nombre_producto)
 );
 
@@ -73,6 +74,16 @@ CREATE TABLE pedidos_productos (
     fk_pedido INTEGER UNSIGNED NOT NULL,
     CONSTRAINT fk_pp_producto FOREIGN KEY (fk_producto) REFERENCES producto(id_producto),
     CONSTRAINT fk_pp_pedido FOREIGN KEY (fk_pedido) REFERENCES pedido(id_pedido)
+);
+
+CREATE TABLE corte_mes_schedule (
+    id_corte_mes_schedule INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    mes_envio INTEGER NOT NULL,
+    anio_envio INTEGER NOT NULL,
+    numero_intentos INTEGER NOT NULL,
+    enviado BOOLEAN NOT NULL,
+    fecha_hora_envio DATETIME,
+    CONSTRAINT uix_corte UNIQUE(mes_envio, anio_envio)
 );
 
 

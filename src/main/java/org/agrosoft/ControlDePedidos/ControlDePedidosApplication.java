@@ -5,10 +5,12 @@ import org.agrosoft.ControlDePedidos.GUI.MainWindow;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.swing.*;
 import java.util.concurrent.CountDownLatch;
 
+@EnableScheduling
 @SpringBootApplication
 public class ControlDePedidosApplication extends SpringBootServletInitializer {
 

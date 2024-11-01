@@ -22,8 +22,10 @@ import java.awt.event.ActionListener;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class AgregarPedidoWindow extends JFrame {
@@ -233,6 +235,7 @@ public class AgregarPedidoWindow extends JFrame {
                 .toList(), 1);
 
         FormUtils.configuraComboBox(this.cbxProductos, ProductoClient.fetchAll().stream()
+                .filter(Producto::isActive)
                 .map(Producto::getNombreProducto)
                 .toList(), 0);
     }

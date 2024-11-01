@@ -79,6 +79,31 @@ public class ProductoController {
         return new ResponseEntity<>(idGuardado, status);
     }
 
+    @PutMapping("/actualizaProducto")
+    public ResponseEntity<?> actualizProducto(@Valid @RequestBody Producto producto, Errors errors) throws
+            InvalidParameterException {
+        log.info("actualizaProducto --START for Producto {} with new name: {}", producto.getIdProducto(),
+                producto.getNombreProducto());
+        HttpStatus status;
+        if(errors.hasErrors()) {
+            throw new InvalidParameterException("Producto received did not match all the validations: " +
+                    ErrorUtils.errorsToStringSet(errors));
+        }
+        try {
+            Producto entity = produtoService.consultarPorId(producto.getIdProducto()).orElseThrow(() -> new
+                    InvalidParameterException("Producto with id <" + producto.getIdProducto() + "> does not exist"));
+            entity.setNombreProducto(producto.getNombreProducto());
+            entity.setActive(producto.isActive());
+            produtoService.guardaProducto(entity);
+            status = HttpStatus.OK;
+        } catch(Exception e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            log.error(e.getMessage(), e);
+        }
+        log.info("actualizaProducto --END");
+        return new ResponseEntity<>(status);
+    }
+
     private void validarInexistenciaDeProducto(String nombreProducto) throws ProductoAlreadyExistsException {
         int id = produtoService.consultarPorNombre(nombreProducto)
                 .orElse(Producto.builder().idProducto(-1).build())

@@ -6,6 +6,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import lombok.extern.slf4j.Slf4j;
 import org.agrosoft.ControlDePedidos.API.entity.*;
 import org.agrosoft.ControlDePedidos.API.enums.StatusLogisticaEnum;
+import org.agrosoft.ControlDePedidos.API.enums.StatusPagoEnum;
 import org.agrosoft.ControlDePedidos.API.enums.StatusPedidoEnum;
 import org.agrosoft.ControlDePedidos.GUI.clients.*;
 import org.agrosoft.ControlDePedidos.GUI.utils.FormUtils;
@@ -36,6 +37,7 @@ public class ModificarPedidoWindow extends JFrame {
     private List<Producto> productoList;
     private float montoTotal;
     private float montoProductos;
+    private final float totalPagos;
 
     private JPanel contentPane;
     private JComboBox<String> cbxStatusPedido;
@@ -77,6 +79,7 @@ public class ModificarPedidoWindow extends JFrame {
         this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.montoTotal = 0F;
         this.montoProductos = 0F;
+        this.totalPagos = calculaTotalPagos();
         this.productoList = this.pedido.getProductos();
         this.setContentPane(contentPane);
         this.txtMontoEnvio.setText(String.valueOf(pedido.getMontoEnvio()));
@@ -139,6 +142,14 @@ public class ModificarPedidoWindow extends JFrame {
         });
     }
 
+    private float calculaTotalPagos() {
+        float totalPago = 0F;
+        for (Pago p : PagoClient.fethByPedido(this.pedido.getIdPedido())) {
+            totalPago += p.getMontoPago();
+        }
+        return totalPago;
+    }
+
 
     private void actualizarPedido() {
         List<String> validaciones = new ArrayList<>();
@@ -159,10 +170,14 @@ public class ModificarPedidoWindow extends JFrame {
         try {
             StatusLogisticaEnum sle = FormUtils.getItemByDescription(StatusLogisticaEnum.class, this.cbxStatusLogistica
                     .getSelectedItem().toString());
+
             StatusLogistica statusLogistica = StatusLogisticaClient.fetchByItem(sle);
 
             StatusPedidoEnum spe = FormUtils.getItemByDescription(StatusPedidoEnum.class, this.cbxStatusPedido
                     .getSelectedItem().toString());
+
+            StatusPago statusPago = StatusPagoClient.fetchByItem(this.validarStatusPago());
+
             StatusPedido statusPedido = StatusPedidoClient.fetchByItem(spe);
             this.pedido.setStatusPedido(statusPedido);
             this.pedido.setNumeroGuia(
@@ -174,6 +189,7 @@ public class ModificarPedidoWindow extends JFrame {
                             .intentaConvertirFloat(this.txtMontoEnvio.getText())
             );
             this.pedido.setStatusLogistica(statusLogistica);
+            this.pedido.setStatusPago(statusPago);
             this.pedido.setProductos(this.productoList);
             this.pedido.setActive(this.ckbActivo.isSelected());
 
@@ -197,6 +213,7 @@ public class ModificarPedidoWindow extends JFrame {
         this.montoTotal = this.txtMontoEnvio.getText().isBlank() ? this.montoProductos : this.montoProductos
                 + FormUtils.intentaConvertirFloat(txtMontoEnvio.getText());
         this.txtMontoTotal.setText(String.valueOf(this.montoTotal));
+        this.txtStatusPago.setText(this.validarStatusPago().getDescripcion());
     }
 
     private void quitarProducto() {
@@ -255,6 +272,7 @@ public class ModificarPedidoWindow extends JFrame {
         }
 
         FormUtils.configuraComboBox(this.cbxProductos, ProductoClient.fetchAll().stream()
+                .filter(Producto::isActive)
                 .map(Producto::getNombreProducto)
                 .toList(), 0);
     }
@@ -271,6 +289,21 @@ public class ModificarPedidoWindow extends JFrame {
         this.tblProductos.setModel(model);
         FormUtils.redimensionarTabla(this.tblProductos);
         this.actualizaMontoTotal();
+    }
+
+    private StatusPagoEnum validarStatusPago() {
+        log.info("Validating if actual StatusPago is correct");
+        StatusPagoEnum statusPago;
+        if (this.totalPagos > 0) {
+            if (this.totalPagos >= this.montoTotal) {
+                statusPago = StatusPagoEnum.PAGADO;
+            } else {
+                statusPago = StatusPagoEnum.APARTADO;
+            }
+        } else {
+            statusPago = StatusPagoEnum.PENDIENTE;
+        }
+        return statusPago;
     }
 
     {

@@ -48,12 +48,6 @@ public class PagoController {
         return ResponseEntity.ok(pagoService.encontrarPorRangoFecha(fechaIni, fechaFin));
     }
 
-    @GetMapping("/porReferencia")
-    public ResponseEntity<?> encontrarPorReferencia(@RequestParam String referencia) {
-        log.info("encontrarPorReferencia --START with Referencia = {}", referencia);
-        return ResponseEntity.ok(pagoService.encontrarPorReferencia(referencia));
-    }
-
     @PostMapping("/crearPago")
     public ResponseEntity<?> crearPago(@Valid @RequestBody Pago toSave, Errors errors) throws InvalidParameterException {
         log.info("crearPago --START. Pago submitted: {}", toSave);

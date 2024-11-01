@@ -40,8 +40,13 @@ public class Producto implements Serializable {
     private float precioUnitario;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "productos")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "productos")
     private List<Pedido> pedidos;
+
+    @NotNull
+    @Builder.Default
+    @Column(name = "active", nullable = false)
+    private boolean active = true;
 
     @Override
     public String toString() {
