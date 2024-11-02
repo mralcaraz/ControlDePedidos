@@ -10,5 +10,7 @@
 	<entry key="statusPedidoContext">/StatusPedido</entry>
 	<entry key="statusLogisticaContext">/StatusLogistica</entry>
 	<entry key="tipoEnvioContext">/TipoEnvio</entry>
+	<entry key="pedidoDetalleContext">/PedidoDetalle</entry>
 	<entry key="rutaReportes">D:\IntelliJ\DocumentosControlPedidos\</entry>
+	<entry key="rutaImpresiones">D:\IntelliJ\DocumentosControlPedidos\</entry>
 </properties>
