@@ -1,0 +1,21 @@
+package org.agrosoft.ControlDePedidos.API.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class PedidoDetalleDTO implements Serializable {
+    private int id;
+    private int numeroPedido;
+    private String nombreDestinatario;
+    private String telefono;
+    private String direccion;
+    private String nota;
+}

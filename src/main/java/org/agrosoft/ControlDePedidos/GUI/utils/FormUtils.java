@@ -51,19 +51,35 @@ public class FormUtils {
 
         int pantallaIndex = XMLHandler.readXMLConfigInt("config.xml", "screenNbr");
 
+        JDialog dialog = new JDialog();
+        dialog.setAlwaysOnTop(true);
+        dialog.setModal(true);
+        dialog.setSize(400, 150);
+
         if (pantallaIndex >= 0 && pantallaIndex < devices.length) {
             Rectangle bounds = devices[pantallaIndex].getDefaultConfiguration().getBounds();
-            JDialog dialog = new JDialog();
-            dialog.setAlwaysOnTop(true);
-            dialog.setModal(true);
-            dialog.setSize(400, 150);
-            dialog.setLocation(bounds.x + (bounds.width/2) - 150, bounds.y + (bounds.height/2) - 400);
-            JOptionPane.showMessageDialog(dialog, message, title, messageType);
-            dialog.dispose();
+            dialog.setLocation(bounds.x + (bounds.width / 2) - 200, bounds.y + (bounds.height / 2) - 75);
         } else {
-            JOptionPane.showMessageDialog(null, message, title, messageType);
+            dialog.setLocationRelativeTo(null);
         }
+
+        JOptionPane optionPane = new JOptionPane(message, messageType, JOptionPane.DEFAULT_OPTION, null,
+                new Object[] {}, null);
+        dialog.setContentPane(optionPane);
+        dialog.pack();
+
+        optionPane.setOptions(new Object[] { "OK" });
+
+        optionPane.addPropertyChangeListener(evt -> {
+            if (JOptionPane.VALUE_PROPERTY.equals(evt.getPropertyName())) {
+                dialog.dispose();
+            }
+        });
+
+        dialog.setVisible(true);
     }
+
+
 
     public static String formateaDinero(float cantidad) {
         return "$ " + df.format(cantidad);

@@ -6,6 +6,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import lombok.extern.slf4j.Slf4j;
 import org.agrosoft.ControlDePedidos.API.entity.Pedido;
 import org.agrosoft.ControlDePedidos.API.enums.StatusPedidoEnum;
+import org.agrosoft.ControlDePedidos.GUI.bo.ImprimirPedidosBO;
 import org.agrosoft.ControlDePedidos.GUI.clients.PedidoClient;
 import org.agrosoft.ControlDePedidos.GUI.enums.PedidosViewEnum;
 import org.agrosoft.ControlDePedidos.GUI.enums.TipoEnvioEnum;
@@ -37,11 +38,13 @@ public class MainWindow extends JFrame {
     private JButton btnCrearPedido;
     private JButton btnSalir;
     private JScrollPane scrollPane;
-    private JButton btnVerDetalles;
+    private JButton btnVerPedido;
     private JLabel lblFiltros;
     private JComboBox<String> cbxTipoEnvio;
     private JComboBox<String> cbxTipoPedido;
     private JButton btnAplicarFiltros;
+    private JButton btnDetalleEnvio;
+    private JButton btnImprimir;
 
     public MainWindow() {
         this.thisReference = this;
@@ -101,12 +104,47 @@ public class MainWindow extends JFrame {
                 llenaPedidos();
             }
         });
-        btnVerDetalles.addActionListener(new ActionListener() {
+        btnVerPedido.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 verDetalles();
             }
         });
+        btnDetalleEnvio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                agregarDetallesDeEnvioAPedido();
+            }
+        });
+        btnImprimir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                imprimirPedidos();
+            }
+        });
+    }
+
+    private void imprimirPedidos() {
+        ImprimirPedidosBO.imprimePedidosConDetalle(this.fetchByParameters());
+    }
+
+    private void agregarDetallesDeEnvioAPedido() {
+        try {
+            int id = Integer.parseInt(this.tblPedidos.getValueAt(this.tblPedidos.getSelectedRow(), 0).toString());
+            Pedido pedido = PedidoClient.fetchById(id);
+            if (Objects.isNull(pedido)) {
+                throw new ReadPropertyException("Unable to read Pedido id");
+            }
+            JFrame detallesEnvio = new AgregarPedidoDetalleEnvioWindow(thisReference, pedido);
+            detallesEnvio.setVisible(true);
+            thisReference.setVisible(false);
+        } catch (Exception ex) {
+            log.error("Exception caught while trying to create AgregarPedidoDetalleEnvioWindow view: {}",
+                    ex.getMessage());
+            JOptionPane.showMessageDialog(thisReference, "Hubo un error al intentar cargar los detalles de" +
+                            " envío del pedido. Seleccione un pedido e intente nuevamente",
+                    "Error al cargar detalles de envío", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void verDetalles() {
@@ -176,7 +214,14 @@ public class MainWindow extends JFrame {
         }
         if (dtm.getRowCount() > 0) {
             this.btnVerPagos.setEnabled(true);
-            this.btnVerDetalles.setEnabled(true);
+            this.btnVerPedido.setEnabled(true);
+            this.btnDetalleEnvio.setEnabled(true);
+            this.btnImprimir.setEnabled(true);
+        } else {
+            this.btnVerPagos.setEnabled(false);
+            this.btnVerPedido.setEnabled(false);
+            this.btnDetalleEnvio.setEnabled(false);
+            this.btnImprimir.setEnabled(false);
         }
         this.tblPedidos.setModel(dtm);
         FormUtils.redimensionarTabla(this.tblPedidos);
@@ -250,68 +295,78 @@ public class MainWindow extends JFrame {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(16, 8, new Insets(0, 0, 0, 0), -1, -1));
+        contentPane.setLayout(new GridLayoutManager(20, 8, new Insets(0, 0, 0, 0), -1, -1));
         final Spacer spacer1 = new Spacer();
-        contentPane.add(spacer1, new GridConstraints(2, 5, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, new Dimension(20, 20), null, null, 0, false));
-        btnClientes = new JButton();
-        btnClientes.setText("Clientes");
-        contentPane.add(btnClientes, new GridConstraints(2, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(spacer1, new GridConstraints(4, 5, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, new Dimension(20, 20), null, null, 0, false));
         final Spacer spacer2 = new Spacer();
-        contentPane.add(spacer2, new GridConstraints(3, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
+        contentPane.add(spacer2, new GridConstraints(5, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
         btnVerPagos = new JButton();
         btnVerPagos.setEnabled(false);
         btnVerPagos.setText("Ver Pagos");
-        contentPane.add(btnVerPagos, new GridConstraints(4, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(btnVerPagos, new GridConstraints(6, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer3 = new Spacer();
-        contentPane.add(spacer3, new GridConstraints(5, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
+        contentPane.add(spacer3, new GridConstraints(7, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
         btnProductos = new JButton();
         btnProductos.setText("Productos");
-        contentPane.add(btnProductos, new GridConstraints(6, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        btnCrearPedido = new JButton();
-        btnCrearPedido.setText("Crear Pedido");
-        contentPane.add(btnCrearPedido, new GridConstraints(8, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(btnProductos, new GridConstraints(8, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer4 = new Spacer();
-        contentPane.add(spacer4, new GridConstraints(11, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
+        contentPane.add(spacer4, new GridConstraints(13, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
         btnSalir = new JButton();
         btnSalir.setText("Salir");
-        contentPane.add(btnSalir, new GridConstraints(12, 6, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(btnSalir, new GridConstraints(16, 6, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer5 = new Spacer();
         contentPane.add(spacer5, new GridConstraints(0, 7, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, new Dimension(20, 20), null, null, 0, false));
         final Spacer spacer6 = new Spacer();
-        contentPane.add(spacer6, new GridConstraints(14, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
+        contentPane.add(spacer6, new GridConstraints(9, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
         final Spacer spacer7 = new Spacer();
-        contentPane.add(spacer7, new GridConstraints(7, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
-        final Spacer spacer8 = new Spacer();
-        contentPane.add(spacer8, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, new Dimension(20, 20), null, null, 0, false));
+        contentPane.add(spacer7, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, new Dimension(20, 20), null, null, 0, false));
         scrollPane = new JScrollPane();
         scrollPane.putClientProperty("html.disable", Boolean.FALSE);
-        contentPane.add(scrollPane, new GridConstraints(1, 1, 12, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(750, -1), null, null, 0, false));
+        contentPane.add(scrollPane, new GridConstraints(1, 1, 15, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(750, -1), null, null, 0, false));
         tblPedidos = new JTable();
         tblPedidos.setAutoResizeMode(0);
         tblPedidos.setUpdateSelectionOnSort(true);
         scrollPane.setViewportView(tblPedidos);
+        final Spacer spacer8 = new Spacer();
+        contentPane.add(spacer8, new GridConstraints(1, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 100), null, null, 0, false));
         final Spacer spacer9 = new Spacer();
-        contentPane.add(spacer9, new GridConstraints(1, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 200), null, null, 0, false));
+        contentPane.add(spacer9, new GridConstraints(11, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
         final Spacer spacer10 = new Spacer();
-        contentPane.add(spacer10, new GridConstraints(9, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
-        btnVerDetalles = new JButton();
-        btnVerDetalles.setEnabled(false);
-        btnVerDetalles.setText("Ver Detalles");
-        contentPane.add(btnVerDetalles, new GridConstraints(10, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer11 = new Spacer();
-        contentPane.add(spacer11, new GridConstraints(13, 1, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        contentPane.add(spacer10, new GridConstraints(17, 1, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         lblFiltros = new JLabel();
         lblFiltros.setText("Filtros");
-        contentPane.add(lblFiltros, new GridConstraints(14, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(lblFiltros, new GridConstraints(18, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         cbxTipoPedido = new JComboBox();
-        contentPane.add(cbxTipoPedido, new GridConstraints(14, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(cbxTipoPedido, new GridConstraints(18, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         cbxTipoEnvio = new JComboBox();
-        contentPane.add(cbxTipoEnvio, new GridConstraints(14, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(cbxTipoEnvio, new GridConstraints(18, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         btnAplicarFiltros = new JButton();
         btnAplicarFiltros.setText("Aplicar");
-        contentPane.add(btnAplicarFiltros, new GridConstraints(14, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(100, -1), 0, false));
+        contentPane.add(btnAplicarFiltros, new GridConstraints(18, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(100, -1), 0, false));
+        final Spacer spacer11 = new Spacer();
+        contentPane.add(spacer11, new GridConstraints(19, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), null, null, 0, false));
         final Spacer spacer12 = new Spacer();
-        contentPane.add(spacer12, new GridConstraints(15, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), null, null, 0, false));
+        contentPane.add(spacer12, new GridConstraints(15, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), null, null, 0, false));
+        btnImprimir = new JButton();
+        btnImprimir.setEnabled(false);
+        btnImprimir.setText("Imprimir");
+        contentPane.add(btnImprimir, new GridConstraints(2, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer13 = new Spacer();
+        contentPane.add(spacer13, new GridConstraints(3, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(20, 20), null, null, 0, false));
+        btnVerPedido = new JButton();
+        btnVerPedido.setEnabled(false);
+        btnVerPedido.setText("Ver Pedido");
+        contentPane.add(btnVerPedido, new GridConstraints(12, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnCrearPedido = new JButton();
+        btnCrearPedido.setText("Crear Pedido");
+        contentPane.add(btnCrearPedido, new GridConstraints(14, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnClientes = new JButton();
+        btnClientes.setText("Clientes");
+        contentPane.add(btnClientes, new GridConstraints(10, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnDetalleEnvio = new JButton();
+        btnDetalleEnvio.setEnabled(false);
+        btnDetalleEnvio.setText("Detalles de Envío");
+        contentPane.add(btnDetalleEnvio, new GridConstraints(4, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -320,5 +375,6 @@ public class MainWindow extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 
 }

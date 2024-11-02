@@ -5,6 +5,7 @@ import org.agrosoft.ControlDePedidos.API.bo.CorteMesBO;
 import org.agrosoft.ControlDePedidos.API.config.CorteMesBOFactory;
 import org.agrosoft.ControlDePedidos.API.entity.CorteMes;
 import org.agrosoft.ControlDePedidos.API.service.CorteMesService;
+import org.agrosoft.ControlDePedidos.API.utils.FileUtils;
 import org.agrosoft.ControlDePedidos.GUI.utils.FormUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -62,34 +63,13 @@ public class CorteMesScheduledTask {
         if(!result.isBlank()) {
             FormUtils.mostrarDialogoEnPantalla("Reporte de fin de mes creado", "Reporte creado",
                     JOptionPane.INFORMATION_MESSAGE);
-            this.abreArchivo(result);
+            FileUtils.abreArchivo(result);
             service.estableceEnviado(corteMes, true);
             this.hasBeenSent = true;
         } else {
             FormUtils.mostrarDialogoEnPantalla("Hubo un error al intentar generar el reporte del mes",
                     "Error al generar reporte del mes", JOptionPane.ERROR_MESSAGE);
             service.estableceEnviado(corteMes, false);
-        }
-    }
-
-    private void abreArchivo(String path) {
-        File file = new File(path);
-        if(file.exists() && file.isFile() && file.canRead()) {
-            if(!Desktop.isDesktopSupported()) {
-                log.info("Cannot open the file due to restrictions of Windows");
-            } else {
-                Desktop desktop = Desktop.getDesktop();
-                if(!desktop.isSupported(Desktop.Action.OPEN)) {
-                    log.info("Cannot open file. Operation is unsupported");
-                    return;
-                }
-                try {
-                    desktop.open(file);
-                    log.info("File opened");
-                } catch (IOException e) {
-                    log.info("Exception caught while opening file. Original message: {}", e.getMessage());
-                }
-            }
         }
     }
 

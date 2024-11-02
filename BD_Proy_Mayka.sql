@@ -86,6 +86,15 @@ CREATE TABLE corte_mes_schedule (
     CONSTRAINT uix_corte UNIQUE(mes_envio, anio_envio)
 );
 
+CREATE TABLE pedido_detalle (
+    id_pedido_detalle INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    telefono VARCHAR(15),
+    direccion VARCHAR(120),
+    notas VARCHAR(120),
+    fk_pedido INTEGER NOT NULL,
+    CONSTRAINT fk_pedido_detalle_pedido FOREIGN KEY (fk_pedido) REFERENCES producto(id_producto)
+);
+
 
 INSERT INTO status_logistica (descripcion_logistica) VALUES ('Pendiente');
 INSERT INTO status_logistica (descripcion_logistica) VALUES ('En Ruta');

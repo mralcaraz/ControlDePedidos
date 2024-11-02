@@ -13,7 +13,9 @@ import com.itextpdf.layout.properties.UnitValue;
 import lombok.extern.slf4j.Slf4j;
 import org.agrosoft.ControlDePedidos.API.converter.PagoConverter;
 import org.agrosoft.ControlDePedidos.API.converter.PedidoCorteConverter;
+import org.agrosoft.ControlDePedidos.API.converter.PedidoPdfConverter;
 import org.agrosoft.ControlDePedidos.API.converter.ProductoConverter;
+import org.agrosoft.ControlDePedidos.API.dto.PedidoDetalleDTO;
 import org.agrosoft.ControlDePedidos.API.entity.Pago;
 import org.agrosoft.ControlDePedidos.API.entity.Pedido;
 import org.agrosoft.ControlDePedidos.API.entity.Producto;
@@ -23,10 +25,14 @@ import org.agrosoft.ControlDePedidos.GUI.utils.XMLHandler;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
 public class PDFGenerator {
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
 
     public static String generaCorte(List<Pedido> pedidosDelMes, List<Pago> pagosDelMes, List<Producto> productos,
                                    List<Pedido> pedidosRelacionados, LocalDate fechaCorte) throws ReadPropertyException,
@@ -99,7 +105,41 @@ public class PDFGenerator {
         return path;
     }
 
-    public static void generaReporte(){}
+    public static String generaReporte(List<PedidoDetalleDTO> pedidos) throws ReadPropertyException,
+            FileNotFoundException {
+        log.info("Retrieving path for new PDF document");
+        String path = XMLHandler.readXMLConfig("config.xml", "rutaImpresiones");
+        path += "ImpresionPedidos" + formatter.format(LocalDateTime.now()) + ".pdf";
+        log.info("Path retrieved. PDF file to create: {}", path);
+        log.info("Preparing PDF file");
+        PedidoPdfConverter pedidoPdfConverter = new PedidoPdfConverter();
+
+        PdfWriter writer = new PdfWriter(path);
+        PdfDocument pdfDocument = new PdfDocument(writer);
+        Document document = new Document(pdfDocument);
+        log.info("PDF File created. Adding title");
+        document.add(
+                new Paragraph("May Arellano")
+                        .setBold()
+                        .setFontSize(22)
+                        .setTextAlignment(TextAlignment.CENTER)
+        );
+        document.add(
+                new Paragraph("Entrega en domicilio")
+                        .setBold()
+                        .setFontSize(22)
+                        .setTextAlignment(TextAlignment.CENTER)
+        );
+
+        if(!pedidos.isEmpty()) {
+            log.info("Pedidos found, adding table");
+            document.add(getTable(pedidoPdfConverter.getEncabezados(), pedidoPdfConverter.convertList(pedidos)));
+        }
+
+        log.info("PDF file successfully created. Closing and preparing");
+        document.close();
+        return path;
+    }
 
     public static Table getTable(String[] encabezados, String[][] datos) {
         Table table = new Table(encabezados.length);

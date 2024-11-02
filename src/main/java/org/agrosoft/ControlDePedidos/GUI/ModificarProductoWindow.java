@@ -71,15 +71,7 @@ public class ModificarProductoWindow extends JFrame {
                 if (ProductoClient.updateProducto(producto) > 0) {
                     JOptionPane.showMessageDialog(thisReference, "Se actualizó correctamente el producto",
                             "¡Producto actualizado!", JOptionPane.INFORMATION_MESSAGE);
-                    if (Objects.nonNull(parentForm)) {
-                        parentForm.setVisible(true);
-                        setVisible(false);
-                        log.info("Returning to parent form after update");
-                        dispose();
-                    } else {
-                        log.info("No parent form found after update. Exit with code 1");
-                        System.exit(1);
-                    }
+                    btnRegresar.doClick();
                 } else {
                     JOptionPane.showMessageDialog(thisReference, "Hubo un error al intentar actualizar el " +
                                     "producto. Intente nuevamente",
