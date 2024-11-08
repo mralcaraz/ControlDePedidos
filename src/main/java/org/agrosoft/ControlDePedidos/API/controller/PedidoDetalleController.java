@@ -2,7 +2,6 @@ package org.agrosoft.ControlDePedidos.API.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.agrosoft.ControlDePedidos.API.converter.PedidoDetalleConverter;
-import org.agrosoft.ControlDePedidos.API.entity.Pedido;
 import org.agrosoft.ControlDePedidos.API.entity.PedidoDetalle;
 import org.agrosoft.ControlDePedidos.API.service.PedidoDetalleService;
 import org.agrosoft.ControlDePedidos.API.service.PedidoService;

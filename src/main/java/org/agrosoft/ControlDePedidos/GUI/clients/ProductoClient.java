@@ -9,11 +9,12 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -52,10 +53,11 @@ public class ProductoClient {
 
     public static Producto fetchByName(String nombre) {
         Producto response;
+        String nombreEncoded = URLEncoder.encode(nombre, StandardCharsets.UTF_8);
         try {
             URI uri = UriComponentsBuilder
                     .fromUri(URI.create(getBaseUrl() + "/porNombreCompleto"))
-                    .queryParam("nombre", nombre)
+                    .queryParam("nombre", nombreEncoded)
                     .build()
                     .toUri();
             log.info("GET calling [{}]", uri);
