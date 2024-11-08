@@ -6,11 +6,9 @@ import org.agrosoft.ControlDePedidos.API.entity.Pedido;
 import org.agrosoft.ControlDePedidos.API.utils.FileUtils;
 import org.agrosoft.ControlDePedidos.API.utils.PDFGenerator;
 import org.agrosoft.ControlDePedidos.GUI.clients.PedidoDetalleClient;
-import org.agrosoft.ControlDePedidos.GUI.exception.ReadPropertyException;
 import org.agrosoft.ControlDePedidos.GUI.utils.FormUtils;
 
 import javax.swing.*;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

@@ -21,8 +21,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -232,7 +230,7 @@ public class ModificarPedidoWindow extends JFrame {
 
     private void agregaProducto() {
         try {
-            String productoNombre = URLEncoder.encode(this.cbxProductos.getSelectedItem().toString(), StandardCharsets.UTF_8);
+            String productoNombre = this.cbxProductos.getSelectedItem().toString();
             Producto producto = ProductoClient.fetchByName(productoNombre);
             if (Objects.isNull(producto)) {
                 JOptionPane.showMessageDialog(this, "Ocurrió un error al intentar agregar el" +
