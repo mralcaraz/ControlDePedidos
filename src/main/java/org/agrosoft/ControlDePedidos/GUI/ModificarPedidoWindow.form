@@ -166,16 +166,6 @@
           <editable value="false"/>
         </properties>
       </component>
-      <component id="868e6" class="javax.swing.JTextField" binding="txtTipoEnvio">
-        <constraints>
-          <grid row="9" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <editable value="false"/>
-        </properties>
-      </component>
       <component id="d43a4" class="javax.swing.JTextField" binding="txtFechaPedido">
         <constraints>
           <grid row="11" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
@@ -330,6 +320,12 @@
         <properties>
           <text value="Está activo"/>
         </properties>
+      </component>
+      <component id="1233e" class="javax.swing.JComboBox" binding="cbxTipoEnvio">
+        <constraints>
+          <grid row="9" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
       </component>
     </children>
   </grid>

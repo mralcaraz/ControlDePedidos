@@ -8,6 +8,7 @@ import org.agrosoft.ControlDePedidos.API.entity.*;
 import org.agrosoft.ControlDePedidos.API.enums.StatusLogisticaEnum;
 import org.agrosoft.ControlDePedidos.API.enums.StatusPagoEnum;
 import org.agrosoft.ControlDePedidos.API.enums.StatusPedidoEnum;
+import org.agrosoft.ControlDePedidos.API.enums.TipoEnvioEnum;
 import org.agrosoft.ControlDePedidos.GUI.clients.*;
 import org.agrosoft.ControlDePedidos.GUI.utils.FormUtils;
 import org.agrosoft.ControlDePedidos.GUI.utils.NumericDocumentListener;
@@ -40,15 +41,15 @@ public class ModificarPedidoWindow extends JFrame {
     private JPanel contentPane;
     private JComboBox<String> cbxStatusPedido;
     private JComboBox<String> cbxStatusLogistica;
+    private JComboBox<String> cbxProductos;
+    private JComboBox<String> cbxTipoEnvio;
     private JTable tblProductos;
     private JTextField txtMontoTotal;
     private JTextField txtMontoEnvio;
     private JTextField txtNombreCliente;
     private JTextField txtStatusPago;
-    private JTextField txtTipoEnvio;
     private JTextField txtFechaPedido;
     private JTextField txtNoGuia;
-    private JComboBox<String> cbxProductos;
     private JButton btnAgregarProducto;
     private JButton btnGuardar;
     private JButton btnRegresar;
@@ -83,7 +84,6 @@ public class ModificarPedidoWindow extends JFrame {
         this.txtMontoEnvio.setText(String.valueOf(pedido.getMontoEnvio()));
         this.txtNombreCliente.setText(RequestUtils.concatenaNombre(pedido.getCliente()));
         this.txtStatusPago.setText(pedido.getStatusPago().getDescripcion());
-        this.txtTipoEnvio.setText(pedido.getTipoEnvio().getDescripcion());
         this.txtFechaPedido.setText(formatter.format(pedido.getFechaPedido()));
         this.txtNoGuia.setText(pedido.getNumeroGuia());
         this.ckbActivo.setSelected(pedido.isActive());
@@ -123,10 +123,12 @@ public class ModificarPedidoWindow extends JFrame {
             public void keyTyped(KeyEvent e) {
                 actualizaMontoTotal();
             }
+
             @Override
             public void keyPressed(KeyEvent e) {
                 actualizaMontoTotal();
             }
+
             @Override
             public void keyReleased(KeyEvent e) {
                 actualizaMontoTotal();
@@ -157,6 +159,9 @@ public class ModificarPedidoWindow extends JFrame {
         if (this.cbxStatusPedido.getSelectedIndex() == -1) {
             validaciones.add("Debe seleccionar el estatus del pedido");
         }
+        if (this.cbxTipoEnvio.getSelectedIndex() == -1) {
+            validaciones.add("Debe seleccionar el estatus del pedido");
+        }
         if (this.cbxStatusLogistica.getSelectedIndex() == -1) {
             validaciones.add("Debe seleccionar el estatus de logística del pedido");
         }
@@ -174,9 +179,16 @@ public class ModificarPedidoWindow extends JFrame {
             StatusPedidoEnum spe = FormUtils.getItemByDescription(StatusPedidoEnum.class, this.cbxStatusPedido
                     .getSelectedItem().toString());
 
+            StatusPedido statusPedido = StatusPedidoClient.fetchByItem(spe);
+
+            TipoEnvioEnum tee = FormUtils.getItemByDescription(TipoEnvioEnum.class, this.cbxTipoEnvio
+                    .getSelectedItem().toString());
+
+            TipoEnvio tipoEnvio = TipoEnvioClient.fetchByItem(tee);
+
             StatusPago statusPago = StatusPagoClient.fetchByItem(this.validarStatusPago());
 
-            StatusPedido statusPedido = StatusPedidoClient.fetchByItem(spe);
+
             this.pedido.setStatusPedido(statusPedido);
             this.pedido.setNumeroGuia(
                     this.txtNoGuia.getText().isBlank() ? null : this.txtNoGuia.getText()
@@ -188,6 +200,7 @@ public class ModificarPedidoWindow extends JFrame {
             );
             this.pedido.setStatusLogistica(statusLogistica);
             this.pedido.setStatusPago(statusPago);
+            this.pedido.setTipoEnvio(tipoEnvio);
             this.pedido.setProductos(this.productoList);
             this.pedido.setActive(this.ckbActivo.isSelected());
 
@@ -273,6 +286,18 @@ public class ModificarPedidoWindow extends JFrame {
                 .filter(Producto::isActive)
                 .map(Producto::getNombreProducto)
                 .toList(), 0);
+
+
+
+        FormUtils.configuraComboBox(this.cbxTipoEnvio, TipoEnvioClient.fetchAll().stream()
+                .map(TipoEnvio::getDescripcion)
+                .toList(), 0);
+        for (int i = 0; i < this.cbxStatusLogistica.getItemCount(); i++) {
+            if (this.cbxTipoEnvio.getModel().getElementAt(i)
+                    .equalsIgnoreCase(this.pedido.getTipoEnvio().getDescripcion())) {
+                this.cbxTipoEnvio.setSelectedIndex(i);
+            }
+        }
     }
 
     private void llenaProductos() {
@@ -374,9 +399,6 @@ public class ModificarPedidoWindow extends JFrame {
         txtStatusPago = new JTextField();
         txtStatusPago.setEditable(false);
         contentPane.add(txtStatusPago, new GridConstraints(7, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        txtTipoEnvio = new JTextField();
-        txtTipoEnvio.setEditable(false);
-        contentPane.add(txtTipoEnvio, new GridConstraints(9, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         txtFechaPedido = new JTextField();
         txtFechaPedido.setEditable(false);
         contentPane.add(txtFechaPedido, new GridConstraints(11, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
@@ -425,6 +447,8 @@ public class ModificarPedidoWindow extends JFrame {
         ckbActivo = new JCheckBox();
         ckbActivo.setText("Está activo");
         contentPane.add(ckbActivo, new GridConstraints(17, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        cbxTipoEnvio = new JComboBox();
+        contentPane.add(cbxTipoEnvio, new GridConstraints(9, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
