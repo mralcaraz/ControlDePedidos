@@ -92,7 +92,7 @@ CREATE TABLE pedido_detalle (
     direccion VARCHAR(120),
     notas VARCHAR(120),
     fk_pedido INTEGER NOT NULL,
-    CONSTRAINT fk_pedido_detalle_pedido FOREIGN KEY (fk_pedido) REFERENCES producto(id_producto)
+    CONSTRAINT fk_pedido_detalle_pedido FOREIGN KEY (fk_pedido) REFERENCES pedido(id_pedido)
 );
 
 
