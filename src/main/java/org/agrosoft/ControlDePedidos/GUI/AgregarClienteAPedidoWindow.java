@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 @Slf4j
@@ -64,7 +65,7 @@ public class AgregarClienteAPedidoWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 log.info("Showing form to add a new Cliente");
-                JFrame crearCliente = new AgregarClienteWindow(thisReference);
+                JFrame crearCliente = new AgregarClienteWindow(thisReference, Optional.empty());
                 crearCliente.setVisible(true);
                 thisReference.setVisible(false);
             }

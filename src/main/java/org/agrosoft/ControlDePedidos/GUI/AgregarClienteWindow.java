@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 public class AgregarClienteWindow extends JFrame {
@@ -27,8 +28,81 @@ public class AgregarClienteWindow extends JFrame {
     private JTextField txtContacto;
     private JButton btnGuardar;
     private JButton btnRegresar;
+    private Optional<Cliente> optionalCliente;
 
-    public void crearCliente() {
+    public AgregarClienteWindow(JFrame parent, Optional<Cliente> optionalCliente) {
+        this.parentForm = parent;
+        log.info("AgregarClienteWindow opened");
+        this.setTitle("Agregar Cliente");
+        this.setSize(500, 400);
+        this.setResizable(false);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        FormUtils.centrarVentanaEnPantalla(this);
+        this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.setContentPane(contentPane);
+        this.optionalCliente = optionalCliente;
+
+        if (this.optionalCliente.isPresent()) {
+            this.setTitle("Modificar cliente");
+            this.txtNombre.setText(this.optionalCliente.get().getNombre());
+            this.txtPrimerApellido.setText(this.optionalCliente.get().getPrimerApellido());
+            this.txtSegundoApellido.setText(this.optionalCliente.get().getSegundoApellido());
+            this.txtContacto.setText(this.optionalCliente.get().getContacto());
+            this.txtContacto.setEditable(false);
+        }
+
+        btnRegresar.addActionListener(actionEvent -> {
+            if (Objects.nonNull(parentForm)) {
+                parentForm.setVisible(true);
+                setVisible(false);
+                log.info("Returning to parent form");
+                dispose();
+            } else {
+                log.info("No parent form found. Exit with code 1");
+                System.exit(1);
+            }
+        });
+        btnGuardar.addActionListener(e -> {
+            if (optionalCliente.isPresent()) {
+                modificarCliente();
+            } else {
+                crearCliente();
+            }
+        });
+    }
+
+    private void modificarCliente() {
+        Cliente cliente = Cliente.builder()
+                .idCliente(this.optionalCliente.get().getIdCliente())
+                .nombre(this.txtNombre.getText())
+                .primerApellido(this.txtPrimerApellido.getText())
+                .segundoApellido(this.txtSegundoApellido.getText().isBlank() ? null : this.txtSegundoApellido.getText())
+                .contacto(this.txtContacto.getText())
+                .build();
+        switch (ClienteClient.updateCliente(cliente)) {
+            case -1:
+                JOptionPane.showMessageDialog(this, "Hubo un error al validar los datos " +
+                                "ingresados y no se pudo crear el cliente. Favor de validar los datos del cliente",
+                        "Error al crear el cliente", JOptionPane.WARNING_MESSAGE);
+                break;
+            case -2:
+                JOptionPane.showMessageDialog(this, "Hubo un error al intentar llamar a la" +
+                                " base de datos. Intente más tarde", "Error al crear el cliente",
+                        JOptionPane.ERROR_MESSAGE);
+                break;
+            case -3:
+                JOptionPane.showMessageDialog(this, "Hubo un error al intentar llamar a " +
+                                "los servicios requeridos", "Error al crear el cliente",
+                        JOptionPane.ERROR_MESSAGE);
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "Se creó exitosamente el cliente",
+                        "¡Cliente creado!", JOptionPane.INFORMATION_MESSAGE);
+                this.btnRegresar.doClick();
+        }
+    }
+
+    private void crearCliente() {
         Cliente cliente = Cliente.builder()
                 .nombre(this.txtNombre.getText())
                 .primerApellido(this.txtPrimerApellido.getText())
@@ -59,31 +133,6 @@ public class AgregarClienteWindow extends JFrame {
                 txtSegundoApellido.setText("");
                 txtContacto.setText("");
         }
-    }
-
-    public AgregarClienteWindow(JFrame parent) {
-        this.parentForm = parent;
-        log.info("AgregarClienteWindow opened");
-        this.setTitle("Agregar Cliente");
-        this.setSize(500, 400);
-        this.setResizable(false);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        FormUtils.centrarVentanaEnPantalla(this);
-        this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        this.setContentPane(contentPane);
-
-        btnRegresar.addActionListener(actionEvent -> {
-            if (Objects.nonNull(parentForm)) {
-                parentForm.setVisible(true);
-                setVisible(false);
-                log.info("Returning to parent form");
-                dispose();
-            } else {
-                log.info("No parent form found. Exit with code 1");
-                System.exit(1);
-            }
-        });
-        btnGuardar.addActionListener(e -> crearCliente());
     }
 
     {

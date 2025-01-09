@@ -68,6 +68,33 @@ public class ClienteController {
         return new ResponseEntity<>(idGuardado, status);
     }
 
+    @PutMapping("/actualizarCliente")
+    public ResponseEntity<?> actualizarCliente(@Valid @RequestBody Cliente toSave, Errors errors)
+            throws InvalidParameterException, ClienteNotFoundException {
+        log.info("actualizarCliente --START. Cliente submitted: {}", toSave);
+        HttpStatus status;
+        int idGuardado;
+        if(errors.hasErrors()) {
+            throw new InvalidParameterException("Cliente received did not match all the validations: " +
+                    ErrorUtils.errorsToStringSet(errors));
+        }
+        Cliente entity = validarExistenciaDeCliente(toSave.getIdCliente());
+        try {
+            log.info("Cliente found. updating entity");
+            entity.setNombre(toSave.getNombre());
+            entity.setPrimerApellido(toSave.getPrimerApellido());
+            entity.setSegundoApellido(toSave.getSegundoApellido());
+            idGuardado = service.guardarCliente(entity);
+            status = HttpStatus.OK;
+        } catch (Exception e) {
+            idGuardado = -1;
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            log.error("Exception caught while updating Cliente. Original message: {}", e.getMessage(), e);
+        }
+        log.info("actualizarCliente --END");
+        return new ResponseEntity<>(idGuardado, status);
+    }
+
     @DeleteMapping("/borrarCliente/{idCliente}")
     public ResponseEntity<?> borrarCliente(@PathVariable int idCliente) throws ClienteNotFoundException {
         log.info("borrarCliente --START with id <{}>", idCliente);

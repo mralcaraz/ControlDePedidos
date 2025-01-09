@@ -91,7 +91,7 @@ CREATE TABLE pedido_detalle (
     telefono VARCHAR(15),
     direccion VARCHAR(120),
     notas VARCHAR(120),
-    fk_pedido INTEGER NOT NULL,
+    fk_pedido INTEGER UNSIGNED NOT NULL,
     CONSTRAINT fk_pedido_detalle_pedido FOREIGN KEY (fk_pedido) REFERENCES pedido(id_pedido)
 );
 

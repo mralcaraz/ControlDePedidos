@@ -292,7 +292,7 @@ public class ModificarPedidoWindow extends JFrame {
         FormUtils.configuraComboBox(this.cbxTipoEnvio, TipoEnvioClient.fetchAll().stream()
                 .map(TipoEnvio::getDescripcion)
                 .toList(), 0);
-        for (int i = 0; i < this.cbxStatusLogistica.getItemCount(); i++) {
+        for (int i = 0; i < this.cbxTipoEnvio.getItemCount(); i++) {
             if (this.cbxTipoEnvio.getModel().getElementAt(i)
                     .equalsIgnoreCase(this.pedido.getTipoEnvio().getDescripcion())) {
                 this.cbxTipoEnvio.setSelectedIndex(i);
