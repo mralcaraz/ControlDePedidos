@@ -27,7 +27,7 @@ public class ClienteClient {
                     .fromUri(URI.create(getBaseUrl() + "/todos"))
                     .build()
                     .toUri();
-            log.info("GET calling [{}]", uri);
+            log.info("GET  calling [{}]", uri);
             ResponseEntity<List<Cliente>> webResponse = new RestTemplate()
                     .exchange(
                             uri,
@@ -129,6 +129,37 @@ public class ClienteClient {
         } catch (Exception e) {
             log.error("Exception ocurred while calling endpoint: {}", e.getMessage(), e);
             response = null;
+        }
+        return response;
+    }
+
+    public static int updateCliente(Cliente cliente) {
+        int response;
+        try {
+            URI uri = UriComponentsBuilder
+                    .fromUriString(getBaseUrl() + "/actualizarCliente")
+                    .build()
+                    .toUri();
+            log.info("PUT calling [{}]", uri);
+            HttpEntity<Cliente> requestEntity = new HttpEntity<>(cliente, RequestUtils.getPostHeaders());
+            ResponseEntity<Void> webResponse = new RestTemplate()
+                    .exchange(
+                            uri,
+                            HttpMethod.PUT,
+                            requestEntity,
+                            new ParameterizedTypeReference<>() {}
+                    );
+            log.info("Estatus de respuesta: <{}>", webResponse.getStatusCode().value());
+            if(webResponse.getStatusCode().is2xxSuccessful()) {
+                response = 1;
+            } else if (webResponse.getStatusCode().is4xxClientError()){
+                response = -1;//error 4XX
+            } else {
+                response = -2;//error 5XX
+            }
+        } catch (Exception e) {
+            log.error("Ocurrió una excepción al mandar llamar al endpoint: {}", e.getMessage(), e);
+            response = -3;
         }
         return response;
     }
